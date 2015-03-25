@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/AppleJavaExtensions.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/asm-debug-all.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/jinput.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/lwjgl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/lwjgl_test.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/lwjgl-debug.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/lzma.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/PNGDecoder.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tristan/Documents/GitHub/winchester-productions/SpaceGame/slick.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
