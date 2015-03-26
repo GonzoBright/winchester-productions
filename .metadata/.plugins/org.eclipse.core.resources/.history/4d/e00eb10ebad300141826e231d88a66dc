@@ -119,7 +119,7 @@ public class Game {
 	/** Whether the mouse is to be grabbed **/
 	private boolean mouseGrabbed = false;
 
-	/** Amount of speed that increases as more aliens are shot **/ 
+	/** Amount of speed that increases as more aliens are shot **/
 	private float difficultyIncrease = DIFFICULTY_EASY;
 	
 	/** EASY **/
