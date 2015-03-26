@@ -123,7 +123,7 @@ public class Game {
 	private float difficultyIncrease = DIFFICULTY_EASY;
 	
 	/** EASY **/
-	private final static float DIFFICULTY_EASY = 1.030f;
+	private final static float DIFFICULTY_EASY = 1.025f;
 	
 	/** MEDIUM **/
 	private final static float DIFFICULTY_MEDIUM = 1.035f;
@@ -220,7 +220,7 @@ public class Game {
 
 			shots = new ShotEntity[5];
 			for (int i = 0; i < shots.length; i++) {
-				shots[i] = new ShotEntity(this, new Image("res/other_shot.gif"), 0, 0);
+				shots[i] = new ShotEntity(this, new Image("res/other_shot.png"), 0, 0);
 			}
 		} catch (SlickException se) {
 			se.printStackTrace();

@@ -123,7 +123,7 @@ public class Game {
 	private float difficultyIncrease = DIFFICULTY_EASY;
 	
 	/** EASY **/
-	private final static float DIFFICULTY_EASY = 1.030f;
+	private final static float DIFFICULTY_EASY = 1.025f;
 	
 	/** MEDIUM **/
 	private final static float DIFFICULTY_MEDIUM = 1.035f;
