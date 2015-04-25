@@ -1,0 +1,80 @@
+package co.uk.tristanindustries;
+
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
+public class Game {
+	private final String WINDOW_TITLE = "Chess Proto";
+	
+	public Game() {
+		initialise();
+	}
+	
+	public void initialise() {
+		// Init window beforehand
+				try {
+					setDisplayMode();
+					setWindowTitle();
+					Display.setFullscreen(fullscreen);
+					Display.create();
+
+					Mouse.setGrabbed(mouseGrabbed);
+
+					glEnable(GL_TEXTURE_2D);
+
+					glDisable(GL_DEPTH_TEST);
+
+					glMatrixMode(GL_PROJECTION);
+					glLoadIdentity();
+
+					glOrtho(0, width, height, 0, -1, 1);
+					glMatrixMode(GL_MODELVIEW);
+					glLoadIdentity();
+					glViewport(0, 0, width, height);
+
+					// Sound initialisation
+					//soundManager = new SoundManager();
+					//soundManager.initialize(8);
+
+					//SHOT_SOUND = soundManager.addSound("shot.wav");
+					//HIT_SOUND = soundManager.addSound("hit.wav");
+				} catch (LWJGLException le) {
+					System.out.println("Game exiting - Initialisation error.");
+					le.printStackTrace();
+					Game.gameRunning = false;
+					return;
+				}
+
+				// Create images, throw exceptions if needed
+				try {
+					gotYou = new Image("res/gotyou.gif");
+					pressAnyKey = new Image("res/pressanykey.gif");
+					youWin = new Image("res/youwin.gif");
+					logo = new Image("res/title.gif");
+					// startButton = new Button(350,350, logo, youWin);
+
+					message = pressAnyKey;
+
+					shots = new ShotEntity[5];
+					for (int i = 0; i < shots.length; i++) {
+						shots[i] = new ShotEntity(this, new Image("res/other_shot.gif"), 0, 0);
+					}
+				} catch (SlickException se) {
+					se.printStackTrace();
+				}
+	}
+}

@@ -1,0 +1,354 @@
+package chessgame;
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import java.util.ArrayList;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
+import co.uk.tristanindustries.Entity;
+import co.uk.tristanindustries.Game;
+
+public class Game {
+	private final String WINDOW_TITLE = "Chess Proto";
+	
+	private int width = 800;
+	
+	private int height = 600;
+	
+	private boolean fullscreen = false;
+	
+	private boolean mouseGrabbed = false;
+	
+	public static boolean gameRunning = true;
+	
+	private ArrayList<ChessPiece> chessPieces = new ArrayList<ChessPiece>();
+	
+	private ArrayList<ChessPiece> removeList = new ArrayList<ChessPiece>();
+	
+	private Image mainTitle;
+	
+	private boolean logicRequiredThisLoop;
+	
+	/** Time of Last Loop **/
+	private long lastLoopTime = getTime();
+
+	/** Time of Last FPS Measurement **/
+	private long lastFpsTime;
+
+	/** Current game FPS **/
+	private int fps;
+	
+	private static long timerTicksPerSecond = Sys.getTimerResolution();
+	
+	/**
+	 * Construct a new game
+	 */
+	public Game() {
+		initialise();
+	}
+	
+	/**
+	 * Get the system time
+	 * 
+	 * @return Current System time in SECONDS
+	 */
+	public static long getTime() {
+		return (Sys.getTime() * 1000) / timerTicksPerSecond;
+	}
+
+	/**
+	 * Sleep for the specified duration
+	 * 
+	 * @param duration
+	 *            The time to sleep in SECONDS.
+	 */
+	public static void sleep(long duration) {
+		try {
+			Thread.sleep((duration * timerTicksPerSecond) / 1000);
+		} catch (InterruptedException inte) {
+		}
+	}
+	
+	/**
+	 * Sets the Window Title
+	 * Self explanatory, really...
+	 */
+	private void setWindowTitle() {
+		Display.setTitle(WINDOW_TITLE + " (" + fps + " FPS) (Easy)");
+	}
+	
+	/**
+	 * Set the display mode for the display.
+	 * 
+	 * @return True if the Display mode was set correctly. False if not.
+	 */
+	private boolean setDisplayMode() {
+		try {
+			DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(
+					width, height, -1, -1, -1, -1, 60, 60);
+
+			org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+					"width=" + width,
+					"height=" + height,
+					"freq=" + 60,
+					"bpp="
+							+ org.lwjgl.opengl.Display.getDisplayMode()
+									.getBitsPerPixel() });
+			return true;
+		} catch (Exception e) {
+			System.out.println("Error!");
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void initialise() {
+		// Init window beforehand
+		try {
+			setDisplayMode();
+			setWindowTitle();
+			Display.setFullscreen(fullscreen);
+			Display.create();
+
+			Mouse.setGrabbed(mouseGrabbed);
+
+			glEnable(GL_TEXTURE_2D);
+
+			glDisable(GL_DEPTH_TEST);
+
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+
+			glOrtho(0, width, height, 0, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glViewport(0, 0, width, height);
+
+			// Sound initialisation
+			//soundManager = new SoundManager();
+			//soundManager.initialize(8);
+
+			//SHOT_SOUND = soundManager.addSound("shot.wav");
+			//HIT_SOUND = soundManager.addSound("hit.wav");
+		} catch (LWJGLException le) {
+			System.out.println("Game exiting - Initialisation error.");
+			le.printStackTrace();
+			Game.gameRunning = false;
+			return;
+		}
+
+		// Create images, throw exceptions if needed
+		//try {
+			//mainTitle = new Image("res/mainTitle.gif");
+		//} catch (SlickException se) {
+			//se.printStackTrace();
+		//}
+		
+		startGame();
+	}
+	
+	/**
+	 * Start a fresh game. Clear all pieces, and
+	 * create new ones.
+	 */
+	private void startGame() {
+		chessPieces.clear();
+		initPieces();
+	}
+	
+	/**
+	 * Initialise the Chess Pieces, and a set
+	 * of Pawns.
+	 */
+	private void initPieces() {
+		// Add castles
+		chessPieces.add(new ChessPiece(1, 1, ChessPiece.CASTLE, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(1, 8, ChessPiece.CASTLE, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(8, 1, ChessPiece.CASTLE, ChessPiece.COLOUR_BLACK));
+		chessPieces.add(new ChessPiece(8, 8, ChessPiece.CASTLE, ChessPiece.COLOUR_BLACK));
+		// Add Knights
+		chessPieces.add(new ChessPiece(1, 2, ChessPiece.KNIGHT, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(1, 7, ChessPiece.KNIGHT, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(8, 2, ChessPiece.KNIGHT, ChessPiece.COLOUR_BLACK));
+		chessPieces.add(new ChessPiece(8, 7, ChessPiece.KNIGHT, ChessPiece.COLOUR_BLACK));
+		// Add Bishops
+		chessPieces.add(new ChessPiece(1, 3, ChessPiece.BISHOP, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(1, 6, ChessPiece.BISHOP, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(8, 3, ChessPiece.BISHOP, ChessPiece.COLOUR_BLACK));
+		chessPieces.add(new ChessPiece(8, 6, ChessPiece.BISHOP, ChessPiece.COLOUR_BLACK));
+		// Add Queens
+		chessPieces.add(new ChessPiece(1, 4, ChessPiece.QUEEN, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(8, 4, ChessPiece.QUEEN, ChessPiece.COLOUR_BLACK));
+		// Add Kings
+		chessPieces.add(new ChessPiece(1, 5, ChessPiece.KING, ChessPiece.COLOUR_WHITE));
+		chessPieces.add(new ChessPiece(8, 5, ChessPiece.KING, ChessPiece.COLOUR_BLACK));
+		// Add Pawns
+		for(int i = 1; i <= 8; i++) {
+			chessPieces.add(new ChessPiece(7, i, ChessPiece.PAWN, ChessPiece.COLOUR_WHITE));
+			chessPieces.add(new ChessPiece(2, i, ChessPiece.PAWN, ChessPiece.COLOUR_BLACK));
+		}
+	}
+	
+	/**
+	 * Informs the game that logic is needed, results in a game event of 
+	 * some type.
+	 */
+	public void updateLogic() {
+		logicRequiredThisLoop = true;
+	}
+	
+	public void removeEntity(ChessPiece piece) {
+		removeList.add(piece);
+	}
+	
+	/**
+	 * The main loop for the game. Clears display and calls the frameRendering
+	 * method. Also updates the display.
+	 * 
+	 * @throws SlickException
+	 */
+	private void gameLoop() throws SlickException {
+		while (Game.gameRunning) {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			frameRendering();
+
+			Display.update();
+		}
+
+		//soundManager.destroy();
+		Display.destroy();
+	}
+	
+	/**
+	 * Responsible for logic updates, rendering entities and handling input The
+	 * main backbone for the game.
+	 */
+	public void frameRendering() {
+		Display.sync(60);
+
+		// Work out the time from last update
+		long delta = getTime() - lastLoopTime;
+		lastLoopTime = getTime();
+		lastFpsTime += delta;
+		fps++;
+
+		// If it has been 1 second since last measurement,
+		// set the fps counter at the top of the screen.
+		// Also, update the score label
+		if (lastFpsTime >= 1000) {
+			setWindowTitle();
+			lastFpsTime = 0;
+			fps = 0;
+		}
+		
+		// move each piece according to
+		// the game's frame time delta
+		for (ChessPiece piece : chessPieces) {
+			piece.update(delta);
+		}
+		
+		// Draw each entity
+		for (ChessPiece piece : chessPieces) {
+			piece.draw();
+		}
+		
+		// Get rid of all entities that have been marked for cleanup.
+		chessPieces.removeAll(removeList);
+		removeList.clear();
+		
+		// POSSIBLY DEPRECATED, LEFT FOR OVERHEAD
+		// If logic is required, usually as a response to a game event,
+		// update the logic for each entity.
+		if (logicRequiredThisLoop) {
+			for (ChessPiece piece : chessPieces) {
+				piece.doLogic();
+			}
+
+			logicRequiredThisLoop = false;
+		}
+		
+		// If were waiting for a "press any key" event, then draw the
+		// message
+		/*if (waitingForKeyPress) {
+			message.draw(325, 250);
+		}*/
+		
+		// Get the x position for the mouse
+		mouseX = Mouse.getDX();
+
+		// Get the inputs for each of the keys, set the booleans
+		// as the result
+		boolean leftPressed = hasInput(Keyboard.KEY_LEFT);
+		boolean rightPressed = hasInput(Keyboard.KEY_RIGHT);
+		boolean firePressed = hasInput(Keyboard.KEY_SPACE);
+		
+		/*if ((firePressed) && (fireHasBeenReleased)) {
+			waitingForKeyPress = false;
+			fireHasBeenReleased = false;
+			startGame();
+		}*/
+		
+		if ((Display.isCloseRequested() || Keyboard
+				.isKeyDown(Keyboard.KEY_ESCAPE))) {
+			Game.gameRunning = false;
+		}
+	}	// EOF: frameRendering
+	
+	/**
+	 * Returns any input that has been received by the keyboard or the mouse.
+	 * 
+	 * @param direction
+	 *            The key that one wants to check.
+	 * @return Returns if the key is true or false.
+	 */
+	private boolean hasInput(int direction) {
+		switch (direction) {
+		case (Keyboard.KEY_LEFT):
+			return Keyboard.isKeyDown(Keyboard.KEY_LEFT) || mouseX < 0;
+		case Keyboard.KEY_RIGHT:
+			return Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || mouseX > 0;
+		case Keyboard.KEY_SPACE:
+			return Keyboard.isKeyDown(Keyboard.KEY_SPACE)
+					|| Mouse.isButtonDown(0);
+		}
+
+		return false;
+	}
+	
+	public static void main(String[] args) {
+		new Game().execute();
+		System.exit(0);
+	}
+	
+	/**
+	 * Starts the game
+	 * 
+	 * @throws SlickException
+	 */
+	public void execute() throws SlickException {
+		gameLoop();
+	}
+}

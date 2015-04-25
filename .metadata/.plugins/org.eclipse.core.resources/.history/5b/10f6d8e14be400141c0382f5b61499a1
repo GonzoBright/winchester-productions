@@ -1,0 +1,162 @@
+package chessgame;
+
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
+public class Game {
+	private final String WINDOW_TITLE = "Chess Proto";
+	
+	private int width = 800;
+	
+	private int height = 600;
+	
+	private boolean fullscreen = false;
+	
+	private boolean mouseGrabbed = false;
+	
+	public static boolean gameRunning = true;
+	
+	private Image mainTitle;
+	
+	private boolean logicRequiredThisLoop;
+	
+	public int[][] testing;
+	
+	/**
+	 * Construct a new game
+	 */
+	public Game() {
+		initialise();
+	}
+	
+	/**
+	 * Sets the Window Title
+	 * Self explanatory, really...
+	 */
+	private void setWindowTitle() {
+		// fill in
+	}
+	
+	/**
+	 * Set the display mode for the display.
+	 * 
+	 * @return True if the Display mode was set correctly. False if not.
+	 */
+	private boolean setDisplayMode() {
+		try {
+			DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(
+					width, height, -1, -1, -1, -1, 60, 60);
+
+			org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+					"width=" + width,
+					"height=" + height,
+					"freq=" + 60,
+					"bpp="
+							+ org.lwjgl.opengl.Display.getDisplayMode()
+									.getBitsPerPixel() });
+			return true;
+		} catch (Exception e) {
+			System.out.println("Error!");
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void initialise() {
+		// Init window beforehand
+		try {
+			setDisplayMode();
+			setWindowTitle();
+			Display.setFullscreen(fullscreen);
+			Display.create();
+
+			Mouse.setGrabbed(mouseGrabbed);
+
+			glEnable(GL_TEXTURE_2D);
+
+			glDisable(GL_DEPTH_TEST);
+
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+
+			glOrtho(0, width, height, 0, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glViewport(0, 0, width, height);
+
+			// Sound initialisation
+			//soundManager = new SoundManager();
+			//soundManager.initialize(8);
+
+			//SHOT_SOUND = soundManager.addSound("shot.wav");
+			//HIT_SOUND = soundManager.addSound("hit.wav");
+		} catch (LWJGLException le) {
+			System.out.println("Game exiting - Initialisation error.");
+			le.printStackTrace();
+			Game.gameRunning = false;
+			return;
+		}
+
+		// Create images, throw exceptions if needed
+		//try {
+			//mainTitle = new Image("res/mainTitle.gif");
+		//} catch (SlickException se) {
+			//se.printStackTrace();
+		//}
+		
+		startGame();
+	}
+	
+	/**
+	 * Start a fresh game. Clear all pieces, and
+	 * create new ones.
+	 */
+	private void startGame() {
+		ChessPiece cp = new ChessPiece(null, 0, 0, 4, 4, 0, ChessPiece.KING);
+		for(int i = 1; i <= 8; i++) {
+			for(int j = 1; j <= 8; j++) {
+				if(cp.isPositionValid(i, j)) {
+					System.out.print("T ");
+				} else {
+					System.out.print("- ");
+				}
+			}
+			System.out.println("");
+		}
+	}
+	
+	private void initPieces() {
+		
+	}
+	
+	/**
+	 * Informs the game that logic is needed, results in a game event of 
+	 * some type.
+	 */
+	public void updateLogic() {
+		logicRequiredThisLoop = true;
+	}
+	
+	public static void main(String[] args) {
+		Game game = new Game();
+	}
+	
+	public void execute() {
+		
+	}
+}

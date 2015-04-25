@@ -8,7 +8,6 @@
 
 package co.uk.tristanindustries;
 
-import java.awt.Font;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
@@ -17,11 +16,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -64,9 +60,6 @@ public class Game {
 	
 	/** Scale of the Start Game message, meant to expand and contract **/
 	private float startPromptScale = 1.0f;
-	
-	/** Amount to change the scale of the message **/
-	private float scaleChange = 0.1f;
 
 	/** Current Shot **/
 	private int shotIndex;

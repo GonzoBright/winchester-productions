@@ -1,0 +1,11 @@
+package co.uk.tristanindustries;
+
+import org.newdawn.slick.Image;
+
+public class ChessPieceKing extends ChessPiece {
+	private Game game;
+	
+	public ChessPieceKing(Game game, int x, int y, int colour) {
+		super(new Image("res/king.gif"), x, y);
+	}
+}

@@ -1,0 +1,186 @@
+package chessgame;
+
+import java.awt.Rectangle;
+
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
+public class ChessPiece {
+	public static final int KING = 1;
+	
+	public static final int QUEEN = 2;
+	
+	public static final int BISHOP = 3;
+	
+	public static final int KNIGHT = 4;
+	
+	public static final int CASTLE = 5;
+	
+	public static final int PAWN = 6;
+
+	public static final int COLOUR_WHITE = 1;
+	
+	public static final int COLOUR_BLACK = 2;
+	
+	private float x;
+	
+	private float y;
+	
+	private int row;
+	
+	private int column;
+	
+	private int colour;
+	
+	private Image sprite;
+	
+	private float dx;
+	
+	private float dy;
+	
+	private int type;
+	
+	private Rectangle me = new Rectangle();
+
+	private Rectangle him = new Rectangle();
+	
+	/**
+	 * Represents a Chess Player
+	 * @param row Row position
+	 * @param column Column position
+	 * @param type Type of piece
+	 * @param colour Piece's colour
+	 */
+	public ChessPiece(int row, int column, int type, int colour) {
+		this.x = x;
+		this.y = y;
+		this.row = row;
+		this.column = column;
+		this.colour = colour;
+		this.type = type;
+		
+		try {
+			if(this.type == KING && this.colour == COLOUR_WHITE)
+				this.sprite = new Image("res/White_King.png");
+			if(this.type == KING && this.colour == COLOUR_BLACK)
+				this.sprite = new Image("res/Black_King.png");
+			if(this.type == QUEEN && this.colour == COLOUR_WHITE)
+				this.sprite = new Image("res/White_Queen.png");
+			if(this.type == QUEEN && this.colour == COLOUR_BLACK)
+				this.sprite = new Image("res/Black_Queen.png");
+			if(this.type == BISHOP && this.colour == COLOUR_WHITE)
+				this.sprite = new Image("res/White_Bishop.png");
+			if(this.type == BISHOP && this.colour == COLOUR_BLACK)
+				this.sprite = new Image("res/Black_Bishop.png");
+			if(this.type == KNIGHT && this.colour == COLOUR_WHITE)
+				this.sprite = new Image("res/White_Knight.png");
+			if(this.type == KNIGHT && this.colour == COLOUR_BLACK)
+				this.sprite = new Image("res/Black_Knight.png");
+			if(this.type == CASTLE && this.colour == COLOUR_WHITE)
+				this.sprite = new Image("res/White_Castle.png");
+			if(this.type == CASTLE && this.colour == COLOUR_BLACK)
+				this.sprite = new Image("res/White_Castle.png");
+		} catch (SlickException se) {
+			System.out.println("Creation of Image failed!");
+			se.printStackTrace();
+		}
+	}
+	
+	public boolean isPositionValid(int nRow, int nColumn) {
+		if(nRow > 8 && nRow < 1) {
+			return false;
+		}
+		
+		switch(type) {
+		case KING:
+			if((nRow - 1 == row) || (nRow + 1 == row) || nRow == row) {
+				if((nColumn - 1 == column) || (nColumn + 1 == column) || nColumn == column) {
+					return true;
+				}
+			}
+			break;
+		case QUEEN:
+			if(nRow == row) {
+				return true;
+			} else if(nColumn == column) {
+				return true;
+			} else if(Math.abs(nRow - row) == Math.abs(nColumn - column)) {
+				return true;
+			}
+			break;
+		case BISHOP:
+			if(Math.abs(nRow - row) == Math.abs(nColumn - column)) {
+				return true;
+			}
+			break;
+		case KNIGHT:
+			if((nRow - 2 == row) && (nColumn - 1 == column)) {
+				return true;
+			}
+			if((nRow - 2 == row) && (nColumn + 1 == column)) {
+				return true;
+			}
+			if((nRow + 2 == row) && (nColumn - 1 == column)) {
+				return true;
+			}
+			if((nRow + 2 == row) && (nColumn + 1 == column)) {
+				return true;
+			}
+			break;
+		case CASTLE:
+			if(nRow == row) {
+				return true;
+			} else if(nColumn == column) {
+				return true;
+			}
+			break;
+		case PAWN:
+			if((nRow + 1) == row && nColumn == column) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void setPosition(int row, int column) {
+		this.row = row;
+		this.column = column;
+	}
+	
+	public void update(long delta) {
+		x += (delta * dx) / 1000;
+		y += (delta * dy) / 1000;
+	}
+
+	public void setHorizontalMovement(float dx) {
+		this.dx = dx;
+	}
+
+	public void setVerticalMovement(float dy) {
+		this.dy = dy;
+	}
+
+	public float getHorizontalMovement() {
+		return dx;
+	}
+
+	public float getVerticalMovement() {
+		return dy;
+	}
+
+	public void draw() {
+		sprite.draw(x, y);
+	}
+
+	public void doLogic() {
+	}
+	
+	public int getRow() {
+		return row;
+	}
+	
+	public int getColumn() {
+		return column;
+	}
+}

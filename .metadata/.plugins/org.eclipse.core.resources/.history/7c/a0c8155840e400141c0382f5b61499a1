@@ -1,0 +1,36 @@
+package co.uk.tristanindustries;
+
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
+public class ChessPieceKing extends ChessPiece {
+	private float moveSpeed = 82;
+	
+	private Game game;
+	
+	public ChessPieceKing(Game game, int x, int y, int colour) throws SlickException {
+		super(new Image("res/king.gif"), x, y);
+		
+		this.game = game;
+		dx = -moveSpeed;
+	}
+	
+	public void move(long delta) {
+		if ((dx < 0) && (x < LEFT_BORDER)) {
+			game.updateLogic();
+		}
+		if ((dx > 0) && (x > RIGHT_BORDER)) {
+			game.updateLogic();
+		}
+
+		super.move(delta);
+	}
+
+	public void doLogic() {
+		dx = -dx;
+	}
+
+	public void collidedWith(ChessPiece other) {
+		// handled elsewhere!
+	}
+}

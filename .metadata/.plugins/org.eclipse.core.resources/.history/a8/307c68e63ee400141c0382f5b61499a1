@@ -1,0 +1,27 @@
+package co.uk.tristanindustries;
+
+import java.awt.Rectangle;
+
+import org.newdawn.slick.Image;
+
+public abstract class ChessPiece {
+	protected float x;
+	
+	protected float y;
+	
+	protected Image sprite;
+	
+	protected float dx;
+	
+	protected float dy;
+	
+	private Rectangle me = new Rectangle();
+
+	private Rectangle him = new Rectangle();
+	
+	protected ChessPiece(Image nSprite, int x, int y) {
+		this.sprite = nSprite;
+		this.x = x;
+		this.y = y;
+	}
+}

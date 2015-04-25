@@ -1,0 +1,13 @@
+package co.uk.tristanindustries;
+
+public class Game {
+	private String WINDOW_TITLE = "Chess Proto";
+	
+	public Game() {
+		initialise();
+	}
+	
+	public void initialise() {
+		
+	}
+}

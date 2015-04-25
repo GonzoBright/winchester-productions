@@ -1,0 +1,9 @@
+package co.uk.tristanindustries;
+
+public abstract class ChessPiece {
+	protected float x;
+	
+	protected float y;
+	
+	
+}

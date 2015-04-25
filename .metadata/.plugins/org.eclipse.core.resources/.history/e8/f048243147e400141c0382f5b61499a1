@@ -1,0 +1,126 @@
+package co.uk.tristanindustries;
+
+import java.awt.Rectangle;
+
+import org.newdawn.slick.Image;
+
+public abstract class ChessPiece {
+	private static final int KING = 1;
+	
+	private static final int QUEEN = 2;
+	
+	private static final int BISHOP = 3;
+	
+	private static final int KNIGHT = 4;
+	
+	private static final int CASTLE = 5;
+	
+	private static final int PAWN = 6;
+	
+	private static final 
+	
+	private float x;
+	
+	private float y;
+	
+	private int row;
+	
+	private int column;
+	
+	private int colour;
+	
+	private Image sprite;
+	
+	private float dx;
+	
+	private float dy;
+	
+	private int type;
+	
+	private Rectangle me = new Rectangle();
+
+	private Rectangle him = new Rectangle();
+	
+	public ChessPiece(Image sprite, int x, int y, int row, int column, int colour, int type) {
+		this.sprite = sprite;
+		this.x = x;
+		this.y = y;
+		this.row = row;
+		this.column = column;
+		this.colour = colour;
+		this.type = type;
+	}
+	
+	public boolean isPositionValid(int nRow, int nColumn) {
+		if(nRow <= 8 && nRow >= 1) {
+			return false;
+		}
+		
+		switch(type) {
+		case this.KING:
+			if((nRow - 1 == row) || (nRow + 1 == row) || nRow == row) {
+				if((nColumn - 1 == column) || (nColumn + 1 == column) || nColumn == column) {
+					return true;
+				}
+			}
+			break;
+		case this.QUEEN:
+			if(nRow == row) {
+				return true;
+			} else if(nColumn == column) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void setPosition(int row, int column) {
+		
+	}
+	
+	public void update(long delta) {
+		x += (delta * dx) / 1000;
+		y += (delta * dy) / 1000;
+	}
+
+	public void setHorizontalMovement(float dx) {
+		this.dx = dx;
+	}
+
+	public void setVerticalMovement(float dy) {
+		this.dy = dy;
+	}
+
+	public float getHorizontalMovement() {
+		return dx;
+	}
+
+	public float getVerticalMovement() {
+		return dy;
+	}
+
+	public void draw() {
+		sprite.draw(x, y);
+	}
+
+	public void doLogic() {
+	}
+
+	public int getX() {
+		return (int) x;
+	}
+
+	public int getY() {
+		return (int) y;
+	}
+
+	public boolean collidesWith(ChessPiece other) {
+		me.setBounds((int) x, (int) y, sprite.getWidth(), sprite.getHeight());
+		him.setBounds((int) other.x, (int) other.y, other.sprite.getWidth(), other.sprite.getHeight());
+
+		return me.intersects(him);
+	}
+
+	public abstract void collidedWith(ChessPiece other);
+}

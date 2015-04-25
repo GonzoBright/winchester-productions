@@ -1,0 +1,21 @@
+package co.uk.tristanindustries;
+
+import java.awt.Rectangle;
+
+public abstract class ChessPiece {
+	protected float x;
+	
+	protected float y;
+	
+	protected Image sprite;
+	
+	protected float dx;
+	
+	protected float dy;
+	
+	private Rectangle me = new Rectangle();
+
+	private Rectangle him = new Rectangle();
+	
+	protected Entity(Image nSprite, int x, int y)
+}

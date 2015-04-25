@@ -1,0 +1,7 @@
+package co.uk.tristanindustries;
+
+public class ChessPieceKing extends ChessPiece {
+	public ChessPieceKing(Game game, int x, int y) {
+		
+	}
+}

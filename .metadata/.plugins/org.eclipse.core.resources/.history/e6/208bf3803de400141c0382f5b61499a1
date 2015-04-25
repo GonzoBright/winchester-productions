@@ -1,0 +1,7 @@
+package co.uk.tristanindustries;
+
+public class Game {
+	public Game() {
+		initialise();
+	}
+}

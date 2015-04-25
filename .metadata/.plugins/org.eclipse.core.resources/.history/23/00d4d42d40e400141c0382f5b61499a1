@@ -1,0 +1,36 @@
+package co.uk.tristanindustries;
+
+import org.newdawn.slick.Image;
+
+public class ChessPieceKing extends ChessPiece {
+	private float moveSpeed = 82;
+	
+	private Game game;
+	
+	public ChessPieceKing(Game game, int x, int y, int colour) {
+		super(new Image("res/king.gif"), x, y);
+		
+		this.game = game;
+		dx = -moveSpeed;
+	}
+	
+	public void move(long delta) {
+		if ((dx < 0) && (x < LEFT_BORDER)) {
+			game.updateLogic();
+		}
+		if ((dx > 0) && (x > RIGHT_BORDER)) {
+			game.updateLogic();
+		}
+
+		super.move(delta);
+	}
+
+	public void doLogic() {
+		dx = -dx;
+		y += DOWNWARD_MOVEMENT;
+	}
+
+	public void collidedWith(Entity other) {
+		// handled elsewhere!
+	}
+}

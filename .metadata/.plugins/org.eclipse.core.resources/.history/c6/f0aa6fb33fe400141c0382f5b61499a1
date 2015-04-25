@@ -1,0 +1,15 @@
+package co.uk.tristanindustries;
+
+import org.newdawn.slick.Image;
+
+public class ChessPieceKing extends ChessPiece {
+	private float moveSpeed = 82;
+	
+	private Game game;
+	
+	public ChessPieceKing(Game game, int x, int y, int colour) {
+		super(new Image("res/king.gif"), x, y);
+		
+		this.game = game;
+	}
+}
